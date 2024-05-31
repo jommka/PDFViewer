@@ -1,3 +1,5 @@
+import os
+import pyAesCrypt
 from io import BytesIO
 import tkinter as tk
 from tkinter import *
@@ -6,7 +8,8 @@ from PyPDF4 import PdfFileReader, PdfFileWriter
 
 
 class Decrypt:
-    def __init__(self, pdf_dec_reader, path):
+    def __init__(self, pdf_dec_reader, path, lvl):
+        self.lvl = lvl
         self.path = path
         self.pdf_dec_reader = pdf_dec_reader
         self.window = Toplevel()
@@ -46,7 +49,7 @@ class Decrypt:
         self.entry_pass.grid(row=3, column=0)
         self.entry_pass.place(relx=0.07, rely=0.55, height=35, width=345)
 
-        self.button_open = ttk.Button(self.window, text="Открыть файл", command=self.decrypt_file)
+        self.button_open = ttk.Button(self.window, text="Снять ключ", command=self.decrypt_file)
         self.button_open.grid(row=4, column=0)
         self.button_open.place(relx=0.07, rely=0.73, height=35, width=150)
 
@@ -60,21 +63,41 @@ class Decrypt:
         else:
             return True
 
+    def decrypt_lvl1(self):
+        self.pdf_dec_reader.decrypt(password=self.entry_pass.get())
+        writer = PdfFileWriter()
+        for page in range(self.pdf_dec_reader.getNumPages()):
+            writer.addPage(self.pdf_dec_reader.getPage(page))
+
+        output_buffer = BytesIO()
+        writer.write(output_buffer)
+        self.pdf_dec_reader.stream.close()
+
+        with open(self.path, mode='wb') as f:
+            f.write(output_buffer.getbuffer())
+        f.close()
+
+    def decrypt_lvl2(self):
+        inpFileSize = os.stat(self.path).st_size
+        out_buffer = BytesIO()
+
+        with open(self.path, mode='rb') as inp_buffer:
+            pyAesCrypt.decryptStream(
+                inp_buffer, out_buffer, self.entry_pass.get(), 64*1024, inpFileSize)
+            inp_buffer.close()
+
+        if out_buffer:
+            with open(self.path, mode='wb') as f:
+                f.write(out_buffer.getbuffer())
+            f.close()
+
+            self.pdf_dec_reader = PdfFileReader(self.path)
+            self.decrypt_lvl1()
+
     def decrypt_file(self):
         if self.error_message():
-            self.pdf_dec_reader.decrypt(password=self.entry_pass.get())
-            writer = PdfFileWriter()
-            for page in range(self.pdf_dec_reader.getNumPages()):
-                writer.addPage(self.pdf_dec_reader.getPage(page))
-
-            output_buffer = BytesIO()
-            writer.write(output_buffer)
-            self.pdf_dec_reader.stream.close()
-
-            with open(self.path, mode='wb') as f:
-                f.write(output_buffer.getbuffer())
-            f.close()
-            #
-            # messagebox.showinfo('Успех', "PDF файл расшифрован")
+            self.decrypt_lvl1() if self.lvl == 1 else self.decrypt_lvl2()
+            messagebox.showinfo('Успех', "PDF файл расшифрован. Можете открыть его для просмотра")
+            self.window.destroy()
 
 

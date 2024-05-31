@@ -86,7 +86,6 @@ class Hiding:
 
     def hiding(self):
         if self.error_message():
-            print("+")
             self.miner = PDFMiner(self.path, self.answer_message())
             self.miner.convert_to_img()
             messagebox.showinfo('Успех', "Данные скрыты")

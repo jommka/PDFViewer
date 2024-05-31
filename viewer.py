@@ -32,7 +32,7 @@ class Viewer:
         self.filemenu_protect = Menu(self.menu)
         self.menu.add_cascade(label="Файл", menu=self.filemenu_open)
         self.filemenu_open.add_command(label="Открыть файл", command=self.check_file)
-        self.filemenu_open.add_command(label="Открыть файл с AES256-CBC", command=self.check_file)
+        self.filemenu_open.add_command(label="Открыть файл с AES256-CBC", command=self.check_file_cbc)
         self.filemenu_open.add_command(label="Выйти", command=self.master.destroy)
         self.menu.add_cascade(label="Защита", menu=self.filemenu_protect)
         self.filemenu_protect.add_command(label="Шифрование", command=Encrypt)
@@ -74,15 +74,22 @@ class Viewer:
         filepath = fd.askopenfilename(title='Выберите PDF-файл', initialdir=os.getcwd(), filetypes=(('PDF', '*.pdf'),))
         if filepath:
             self.path = filepath
-            pdf_dec_reader = PdfFileReader(self.path)
+            # pdf_dec_reader = PdfFileReader(self.path)
+            pdf_dec_reader = PdfFileReader(open(self.path, 'rb'), strict=False)
             if pdf_dec_reader.isEncrypted:
-                Decrypt(pdf_dec_reader, self.path)
+                Decrypt(pdf_dec_reader, self.path, 1)
             else:
                 self.open_file()
 
+    def check_file_cbc(self):
+        filepath = fd.askopenfilename(title='Выберите PDF-файл', initialdir=os.getcwd(), filetypes=(('PDF', '*.pdf'),))
+        if filepath:
+            self.path = filepath
+            Decrypt(None, self.path, 2)
+
     def open_file(self):
         filename = os.path.basename(self.path)
-        self.miner = PDFMiner(self.path)
+        self.miner = PDFMiner(self.path, newfilepath=None)
         data, numPages = self.miner.get_metadata()
         self.current_page = 0
         if numPages:

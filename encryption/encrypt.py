@@ -125,3 +125,4 @@ class Encrypt:
             f.close()
 
             messagebox.showinfo('Успех', "PDF файл зашифрован")
+            self.window.destroy()
