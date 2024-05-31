@@ -6,7 +6,8 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from tkinter import filedialog as fd
 from PyPDF2 import PdfFileReader, PdfFileWriter
-from info import Info
+
+from encryption.info import Info
 
 
 class Encrypt:

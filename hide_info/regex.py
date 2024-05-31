@@ -8,7 +8,7 @@ class Regex:
 
     @staticmethod
     def read_json():
-        with open('./json/regex.json', 'r', encoding='utf-8') as f:
+        with open('hide_info/json/regex.json', 'r', encoding='utf-8') as f:
             text = json.load(f)
         return text
 

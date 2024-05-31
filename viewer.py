@@ -1,14 +1,13 @@
+import os
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog as fd
-import os
-import keyboard
+from PyPDF4 import PdfFileReader
 
-from decrypt import Decrypt
-from encrypt import Encrypt
-from hiding import Hiding
 from miner import PDFMiner
-from PyPDF4 import PdfFileReader, PdfFileWriter
+from encryption.decrypt import Decrypt
+from encryption.encrypt import Encrypt
+from hide_info.hiding import Hiding
 
 
 class Viewer:
@@ -25,7 +24,7 @@ class Viewer:
         self.master.title('PDF Viewer')
         self.master.geometry('580x520+440+180')
         self.master.resizable(width=0, height=0)
-        self.master.iconbitmap(self.master, r'D:\Диплом\PDF Viewer\icon.ico')
+        self.master.iconbitmap(self.master, r'D:\Диплом\PDF Viewer\icons\icon.ico')
 
         self.menu = Menu(self.master)
         self.master.config(menu=self.menu)
@@ -57,8 +56,8 @@ class Viewer:
         self.scrolly.configure(command=self.output.yview)
         self.scrollx.configure(command=self.output.xview)
 
-        self.uparrow_icon = PhotoImage(file=r'D:\Диплом\PDF Viewer\up.png')
-        self.downarrow_icon = PhotoImage(file=r'D:\Диплом\PDF Viewer\down.png')
+        self.uparrow_icon = PhotoImage(file=r'icons/up.png')
+        self.downarrow_icon = PhotoImage(file=r'icons/down.png')
         self.uparrow = self.uparrow_icon.subsample(3, 3)
         self.downarrow = self.downarrow_icon.subsample(3, 3)
         self.upbutton = ttk.Button(self.bottom_frame, image=self.uparrow, command=self.previous_page)
@@ -67,9 +66,9 @@ class Viewer:
         self.downbutton.grid(row=0, column=3, pady=8)
         self.page_label = ttk.Label(self.bottom_frame, text='страница')
         self.page_label.grid(row=0, column=4, padx=5)
-
-        keyboard.add_hotkey("win + shift + s", lambda: None, suppress=True)
-        keyboard.add_hotkey("PrtScn", lambda: None, suppress=True)
+        #
+        # keyboard.add_hotkey("win + shift + s", lambda: None, suppress=True)
+        # keyboard.add_hotkey("PrtScn", lambda: None, suppress=True)
 
     def check_file(self):
         filepath = fd.askopenfilename(title='Выберите PDF-файл', initialdir=os.getcwd(), filetypes=(('PDF', '*.pdf'),))

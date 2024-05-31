@@ -1,16 +1,17 @@
 import os
-from io import BytesIO
-import pyAesCrypt
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk, messagebox
+from tkinter import messagebox as mb
 from tkinter import filedialog as fd
-from PyPDF2 import PdfFileReader, PdfFileWriter
-from info import Info
+
+from PyPDF2 import PdfFileReader
+from miner import PDFMiner
 
 
 class Hiding:
     def __init__(self):
+        self.miner = None
         self.path = None
         self.pdf = None
         self.pdf_dec_reader = None
@@ -69,6 +70,23 @@ class Hiding:
             self.pdf_dec_reader = PdfFileReader(self.path)
             self.display_text.set(os.path.basename(self.path))
 
+    def error_message(self):
+        if self.path is None:
+            messagebox.showwarning('Ошибка', "Похоже вы не выбрали файл")
+        else:
+            return True
+
     @staticmethod
-    def hiding():
-        print("+")
+    def answer_message():
+        new_file_name = None
+        answer = mb.askyesno(message="Создать новый файл? (в случае отказа файл будет перезаписан)")
+        if answer:
+            new_file_name = fd.asksaveasfilename(defaultextension=".pdf", filetypes=[('pdf file', '*.pdf')])
+        return new_file_name
+
+    def hiding(self):
+        if self.error_message():
+            print("+")
+            self.miner = PDFMiner(self.path, self.answer_message())
+            self.miner.convert_to_img()
+            messagebox.showinfo('Успех', "Данные скрыты")
