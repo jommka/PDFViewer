@@ -74,7 +74,7 @@ class Decrypt:
             with open(self.path, mode='wb') as f:
                 f.write(output_buffer.getbuffer())
             f.close()
-
-            messagebox.showinfo('Успех', "PDF файл расшифрован")
+            #
+            # messagebox.showinfo('Успех', "PDF файл расшифрован")
 
 

@@ -107,7 +107,7 @@ class PDFMiner:
         regex_dict = Regex().get_pattern()
         words = [w for key in regex_dict for w in re.findall(regex_dict[key], " ".join(text['text']))]
         for w in words:
-            print(w)
+            # print(w)
             coordinates, h = self.get_coordinates(w, boxes, text)
             self.hide(coordinates, h)
 
@@ -129,7 +129,6 @@ class PDFMiner:
             text = self.get_text()
             boxes = len(text['level'])
             self.search(text, boxes)
-            # self.name_img = f'example.jpg'
             out_img.append(self.name_img)
         self.convert_to_pdf(out_img)
 
