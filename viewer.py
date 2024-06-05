@@ -2,6 +2,8 @@ import os
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog as fd
+
+import keyboard
 from PyPDF4 import PdfFileReader
 
 from miner import PDFMiner
@@ -66,7 +68,7 @@ class Viewer:
         self.downbutton.grid(row=0, column=3, pady=8)
         self.page_label = ttk.Label(self.bottom_frame, text='страница')
         self.page_label.grid(row=0, column=4, padx=5)
-        #
+
         # keyboard.add_hotkey("win + shift + s", lambda: None, suppress=True)
         # keyboard.add_hotkey("PrtScn", lambda: None, suppress=True)
 
@@ -82,7 +84,7 @@ class Viewer:
                 self.open_file()
 
     def check_file_cbc(self):
-        filepath = fd.askopenfilename(title='Выберите PDF-файл', initialdir=os.getcwd(), filetypes=(('PDF', '*.pdf'),))
+        filepath = fd.askopenfilename(title='Выберите PDF-файл', iniпоtialdir=os.getcwd(), filetypes=(('PDF', '*.pdf'),))
         if filepath:
             self.path = filepath
             Decrypt(None, self.path, 2)
