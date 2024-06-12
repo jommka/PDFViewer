@@ -14,10 +14,11 @@ class Analysis:
     def open_image(title):
         img = cv2.imread(title, cv2.IMREAD_COLOR)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.bilateralFilter(gray, 11, 17, 17)
         return gray
 
     def get_text(self):
-        gray = cv2.bilateralFilter(self.open_image(self.name_img), 11, 17, 17)
+        gray = self.open_image(self.name_img)
         text = pytesseract.image_to_data(gray, output_type='dict', lang='rus')
         return text
 

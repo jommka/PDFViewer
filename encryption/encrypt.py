@@ -111,8 +111,6 @@ class Encrypt:
             for page in range(self.pdf.getNumPages()):
                 pdfWriter.addPage(self.pdf.getPage(page))
             pdfWriter.encrypt(user_password=self.entry_pass.get(), owner_pwd=None, use_128bit=True)
-            # result = open(self.path, 'wb')
-            # pdfWriter.write(result)
             output_buffer = BytesIO()
             pdfWriter.write(output_buffer)
             self.pdf.stream.close()

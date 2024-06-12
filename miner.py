@@ -3,9 +3,7 @@ import fitz
 from tkinter import PhotoImage
 from pdf2image import convert_from_path
 import img2pdf
-from pytesseract import pytesseract
 import os
-import cv2
 
 from hide_info.analysis import Analysis
 
@@ -22,7 +20,6 @@ class PDFMiner:
         zoomdict = {800: 0.8, 700: 0.6, 600: 1.0, 500: 1.0}
         width = int(math.floor(self.width / 100.0) * 100)
         self.zoom = zoomdict[width]
-        pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
     def get_metadata(self):
         metadata = self.pdf.metadata
